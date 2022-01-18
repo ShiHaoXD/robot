@@ -1,27 +1,37 @@
-"use strict"
-const { createClient } = require("oicq")
+import {createClient} from "oicq";
+import plugins from "./plugins/plugins.js"
+import { messageSender } from "./messageSender.js";
+const account = 3300945532;
+const password="wushihao12345"
+function createBot() {
+	const bot = createClient(account);
+	//监听并输入滑动验证码ticket(同一设备只需验证一次)
+	bot.on('system.login.slider', () => {
+	  process.stdin.once('data', input => {
+		bot.sliderLogin(input);
+	  });
+	});
+  
+	//监听设备锁验证(同一设备只需验证一次)
+	bot.on('system.login.device', () => {
+	  bot.logger.info('验证完成后敲击Enter继续..');
+	  process.stdin.once('data', () => {
+		bot.login();
+	  });
+	});
+	bot.login(password);
+	return bot;
+  }
+const bot = createBot();
+const msgSender=new messageSender(bot,261497187);
+export {bot,msgSender};
 
-const account = 0
-
-const bot = createClient(account)
-
-bot
-.on("system.login.qrcode", function (e) {
-	this.logger.mark("扫码后按Enter完成登录")
-	process.stdin.once("data", () => {
-		this.login()
-	})
-})
-.login()
-
-exports.bot = bot
-
-// template plugins
-require("./plugin-hello") //hello world
-require("./plugin-image") //发送图文和表情
-require("./plugin-request") //加群和好友
-require("./plugin-online") //监听上线事件
-
+function installPlugin() {
+	plugins.forEach(plugin => {
+	  plugin.install();
+	});
+  }
+installPlugin();
 process.on("unhandledRejection", (reason, promise) => {
-	console.log('Unhandled Rejection at:', promise, 'reason:', reason)
-})
+	console.log("Unhandled Rejection at:", promise, "reason:", reason);
+});

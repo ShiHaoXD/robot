@@ -3,13 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "node ./index.js"
+    "dev": "pm2 start index.js --name=bot",
+    "stop": "pm2 stop bot",
+    "log": "pm2 logs bot",
+    "list": "pm2 list",
+    "delete": "pm2 delete bot"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "oicq": "^2.1.4"
+    "axios": "^0.24.0",
+    "core-js": "2",
+    "node-schedule": "^2.1.0",
+    "oicq": "^2.1.4",
+    "pm2": "^5.1.2"
   },
   "devDependencies": {
     "@types/node": "^16.6.1"
