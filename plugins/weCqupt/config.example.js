@@ -18,6 +18,7 @@ export const infos= {
           gender: '男',
         },
       owner_id: 1730042969, // 该名学生的 QQ 号，只有用该 QQ 号可以申请
+      switch_key:true   //个人自定义
     },
     肖双旺: {
       info: {
@@ -29,5 +30,6 @@ export const infos= {
         gender: '男',
       },
     owner_id: 2017109706, // 该名学生的 QQ 号，只有用该 QQ 号可以申请
+    switch_key:true
   },
   };

@@ -86,7 +86,9 @@ const hourCode = [
 	"TCgR",
 	"wbjP",
 ];
-let switchkey=true;
+let switchkey = true;
+const PersonalShutReg = /^关闭个人打卡 /;
+const PersonalOpenReg = /^打开个人打卡 /;
 function getMrdkKey(d, h) {
 	return dateCode[d] + hourCode[h];
 }
@@ -168,33 +170,48 @@ async function healthClockin(name) {
 	}
 }
 const install = () => {
-	bot.on("message.group",(msg)=>{
-		if(msg.raw_message==="关闭每日打卡"){
-			if(msg.sender.user_id===1716509548)
-			{
-			switchkey=false;
-			msg.reply("关闭成功",false);
+	bot.on("message.group", (msg) => {
+		if (msg.raw_message === "关闭每日打卡") {
+			if (msg.sender.user_id === 1716509548) {
+				switchkey = false;
+				msg.reply("关闭成功", false);
+			} else {
+				msg.reply("你何德何能", true);
 			}
-			else{
-				msg.reply("你何德何能",true);
-			}
-		}
-		else if(msg.raw_message==="打开每日打卡"){
-			if(msg.sender.user_id===1716509548)
-			{
-			switchkey=true;
-			msg.reply("打开成功",false);
-			}
-			else{
-				msg.reply("你何德何能",true);
+		} else if (msg.raw_message === "打开每日打卡") {
+			if (msg.sender.user_id === 1716509548) {
+				switchkey = true;
+				msg.reply("打开成功", false);
+			} else {
+				msg.reply("你何德何能", true);
 			}
 		}
-		if(msg.raw_message==="打卡插件状态查询"){
-			if(switchkey){
-				msg.reply("正确的",false);
+		if (PersonalShutReg.test(msg.raw_message)) {
+			if (
+				msg.sender.user_id ===
+				infos[msg.raw_message.replace(PersonalShutReg, "")].owner_id
+			) {
+				infos[msg.raw_message.replace(PersonalShutReg, "")].switchkey = false;
+				msg.reply("关闭成功", false);
+			} else {
+				msg.reply("你何德何能", true);
 			}
-			else{
-				msg.reply("错误的",false);
+		} else if (PersonalOpenReg.test(msg.raw_message)) {
+			if (
+				msg.sender.user_id ===
+				infos[msg.raw_message.replace(PersonalOpenReg, "")].owner_id
+			) {
+				switchkey = true;
+				msg.reply("打开成功", false);
+			} else {
+				msg.reply("你何德何能", true);
+			}
+		}
+		if (msg.raw_message === "打卡插件状态查询") {
+			if (switchkey) {
+				msg.reply("正确的", false);
+			} else {
+				msg.reply("错误的", false);
 			}
 		}
 		// if(msg.raw_message==="懒狗查询"){
@@ -209,7 +226,7 @@ const install = () => {
 		// 		}
 		// 	}
 		// }
-	})
+	});
 	scheduleJob("5 0 0 * * *", () => {
 		if (switchkey) {
 			for (const name in infos) {
@@ -218,8 +235,8 @@ const install = () => {
 		}
 	});
 };
-const plugin={
-	name:"weCqupt",
-	install
-}
-export default plugin
+const plugin = {
+	name: "weCqupt",
+	install,
+};
+export default plugin;
