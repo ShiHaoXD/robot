@@ -1,5 +1,5 @@
 
-import { Client, segment } from "oicq";
+import { segment } from "oicq";
 import { bot,msgSender} from "../index.js";
 
 const install = () => {

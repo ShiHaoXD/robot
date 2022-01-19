@@ -6,7 +6,7 @@ import {
 } from "./util.js";
 import { infos } from "./config.example.js";
 import { scheduleJob } from "node-schedule";
-import { msgSender } from "../../index.js";
+import { bot, msgSender } from "../../index.js";
 const baseURL = "https://we.cqupt.edu.cn/api";
 const headers = {
 	"User-Agent":
@@ -14,13 +14,11 @@ const headers = {
 	"content-type": "application/json",
 };
 const { post } = createAxiosInstance(baseURL, headers);
-
 const random = (min, max) => {
 	return parseInt(Math.random() * (max - min + 1) + min, 10);
 };
 const json2base64 = (json) =>
 	Buffer.from(JSON.stringify(json)).toString("base64");
-
 const getClockinStatus = (data) =>
 	post("/mrdk/get_mrdk_flag.php", {
 		key: json2base64(data),
@@ -88,7 +86,7 @@ const hourCode = [
 	"TCgR",
 	"wbjP",
 ];
-
+let switchkey=true;
 function getMrdkKey(d, h) {
 	return dateCode[d] + hourCode[h];
 }
@@ -170,8 +168,50 @@ async function healthClockin(name) {
 	}
 }
 const install = () => {
+	bot.on("message.group",(msg)=>{
+		if(msg.raw_message==="关闭每日打卡"){
+			if(msg.sender.user_id===1716509548)
+			{
+			switchkey=false;
+			msg.reply("关闭成功",false);
+			}
+			else{
+				msg.reply("你何德何能",true);
+			}
+		}
+		else if(msg.raw_message==="打开每日打卡"){
+			if(msg.sender.user_id===1716509548)
+			{
+			switchkey=true;
+			msg.reply("打开成功",false);
+			}
+			else{
+				msg.reply("你何德何能",true);
+			}
+		}
+		if(msg.raw_message==="打卡插件状态查询"){
+			if(switchkey){
+				msg.reply("正确的",false);
+			}
+			else{
+				msg.reply("错误的",false);
+			}
+		}
+		// if(msg.raw_message==="懒狗查询"){
+		// 	for (const name in infos) {
+		// 		const { data: clockinStatus } = getClockinStatus({
+		// 			xh:infos[name].xh,
+		// 			timestamp: getNowTimestamp(),
+		// 		});
+		// 		const count = clockinStatus.data.count;
+		// 		if(count){
+		// 			msgSender.sendGroupMsg(`${name}`);
+		// 		}
+		// 	}
+		// }
+	})
 	scheduleJob("5 0 0 * * *", () => {
-		if (true) {
+		if (switchkey) {
 			for (const name in infos) {
 				healthClockin(name);
 			}
