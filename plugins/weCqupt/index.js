@@ -227,7 +227,7 @@ const install = () => {
 		// 	}
 		// }
 	});
-	scheduleJob("5 0 0 * * *", () => {
+	scheduleJob("0 0 8 * * *", () => {
 		if (switchkey) {
 			for (const name in infos) {
 				healthClockin(name);
