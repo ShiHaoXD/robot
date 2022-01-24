@@ -8,7 +8,7 @@ const fs = require('fs');
 const initBrowser = async () => {
     const browserWSEndpoint = await puppeteer
         .launch({
-        headless: true,
+        headless: false,
         defaultViewport: { width: 1920, height: 1080 },
         args: ['--start-maximized', '--no-sandbox'],
         ignoreDefaultArgs: ['--enable-automation'],
@@ -26,7 +26,7 @@ const closeBrowser = async (browserWSEndpoint) => {
     browser.close();
 };
 exports.closeBrowser = closeBrowser;
-const get_Page_Date = async (browser, url) => {
+const get_Page_Date = async (browser, url, name) => {
     //创建一个Page实例
     const page = await browser.newPage();
     await page.setViewport({
@@ -94,14 +94,17 @@ const get_Page_Date = async (browser, url) => {
             videoSrc = (mainCard.querySelector('.video-container a')).href;
         }
         return {
-            time,
-            msgUrl,
-            post_Content,
-            repost_Sender,
-            repost_content,
-            imgSrc,
-            video_content,
-            videoSrc,
+            name: name,
+            data: {
+                time,
+                msgUrl,
+                post_Content,
+                repost_Sender,
+                repost_content,
+                imgSrc,
+                video_content,
+                videoSrc,
+            },
         };
     });
     await page.close();
@@ -112,17 +115,25 @@ const get_Date = async (browserWSEndpoint) => {
     const browser = await puppeteer.connect({
         browserWSEndpoint: browserWSEndpoint,
     });
-    const task = [];
-    info_1.Urls.forEach(val => {
-        task.push((async () => {
-            const data = await get_Page_Date(browser, val.url);
-            return {
-                name: val.name,
-                data: data,
-            };
-        })());
-    });
-    const Dates = await Promise.all(task);
+    // const task: any[] = [];
+    // Urls.forEach(val => {
+    //   task.push(
+    //     (async () => {
+    //       const data: Data = await get_Page_Date(browser, val.url);
+    //       return {
+    //         name: val.name,
+    //         data: data,
+    //       };
+    //     })()
+    //   );
+    // });
+    // const Dates: Dates[] = await Promise.all(task);
+    const Dates = [];
+    Dates[0] = await get_Page_Date(browser, info_1.Urls[0].url, info_1.Urls[0].name);
+    Dates[1] = await get_Page_Date(browser, info_1.Urls[1].url, info_1.Urls[1].name);
+    Dates[2] = await get_Page_Date(browser, info_1.Urls[2].url, info_1.Urls[2].name);
+    Dates[3] = await get_Page_Date(browser, info_1.Urls[3].url, info_1.Urls[3].name);
+    Dates[4] = await get_Page_Date(browser, info_1.Urls[4].url, info_1.Urls[4].name);
     console.log(Dates);
     return Dates;
 };

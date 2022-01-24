@@ -6,7 +6,7 @@ const fs = require('fs');
 const initBrowser = async () => {
   const browserWSEndpoint = await puppeteer
     .launch({
-      headless: true,
+      headless: false,
       defaultViewport: {width: 1920, height: 1080},
       args: ['--start-maximized', '--no-sandbox'],
       ignoreDefaultArgs: ['--enable-automation'],
@@ -22,7 +22,7 @@ const closeBrowser = async (browserWSEndpoint: any) => {
   });
   browser.close();
 };
-const get_Page_Date = async (browser: any, url: String) => {
+const get_Page_Date = async (browser: any, url: String, name: string) => {
   //创建一个Page实例
   const page = await browser.newPage();
   await page.setViewport({
@@ -35,7 +35,7 @@ const get_Page_Date = async (browser: any, url: String) => {
     waitUntil: ['networkidle0'],
   });
 
-  const data: Data = await page.evaluate(async () => {
+  const data: Dates = await page.evaluate(async () => {
     function check() {
       let type_Str = '';
       if (mainCard.querySelector('.repost') !== null) {
@@ -104,14 +104,17 @@ const get_Page_Date = async (browser: any, url: String) => {
       )).href;
     }
     return {
-      time,
-      msgUrl,
-      post_Content,
-      repost_Sender,
-      repost_content,
-      imgSrc,
-      video_content,
-      videoSrc,
+      name: name,
+      data: {
+        time,
+        msgUrl,
+        post_Content,
+        repost_Sender,
+        repost_content,
+        imgSrc,
+        video_content,
+        videoSrc,
+      },
     };
   });
   await page.close();
@@ -122,19 +125,22 @@ const get_Date = async (browserWSEndpoint: any) => {
   const browser = await puppeteer.connect({
     browserWSEndpoint: browserWSEndpoint,
   });
-  const task: any[] = [];
-  Urls.forEach(val => {
-    task.push(
-      (async () => {
-        const data: Data = await get_Page_Date(browser, val.url);
-        return {
-          name: val.name,
-          data: data,
-        };
-      })()
-    );
-  });
-  const Dates: Dates[] = await Promise.all(task);
+  // const task: any[] = [];
+  // Urls.forEach(val => {
+  //   task.push(
+  //     (async () => {
+  //       const data: Dates = await get_Page_Date(browser, val.url,val.name);
+  //       return data
+  //     })()
+  //   );
+  // });
+  // const Dates: Dates[] = await Promise.all(task);   //<-并发式获取数据，要求多核，单核真不行
+  const Dates: Dates[] = [];
+  Dates[0] = await get_Page_Date(browser, Urls[0].url, Urls[0].name);
+  Dates[1] = await get_Page_Date(browser, Urls[1].url, Urls[1].name);
+  Dates[2] = await get_Page_Date(browser, Urls[2].url, Urls[2].name);
+  Dates[3] = await get_Page_Date(browser, Urls[3].url, Urls[3].name);
+  Dates[4] = await get_Page_Date(browser, Urls[4].url, Urls[4].name);
   console.log(Dates);
   return Dates;
 };
