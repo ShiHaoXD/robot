@@ -6,7 +6,7 @@ const fs = require('fs');
 const initBrowser = async () => {
   const browserWSEndpoint = await puppeteer
     .launch({
-      headless: false,
+      headless: true,
       defaultViewport: {width: 1920, height: 1080},
       args: ['--start-maximized', '--no-sandbox'],
       ignoreDefaultArgs: ['--enable-automation'],
@@ -22,7 +22,7 @@ const closeBrowser = async (browserWSEndpoint: any) => {
   });
   browser.close();
 };
-const get_Page_Date = async (browser: any, url: String, name: string) => {
+const get_Page_Date = async (browser: any, url: String, name: String) => {
   //创建一个Page实例
   const page = await browser.newPage();
   await page.setViewport({
@@ -35,7 +35,7 @@ const get_Page_Date = async (browser: any, url: String, name: string) => {
     waitUntil: ['networkidle0'],
   });
 
-  const data: Dates = await page.evaluate(async () => {
+  const data: Data = await page.evaluate(async () => {
     function check() {
       let type_Str = '';
       if (mainCard.querySelector('.repost') !== null) {
@@ -104,21 +104,21 @@ const get_Page_Date = async (browser: any, url: String, name: string) => {
       )).href;
     }
     return {
-      name: name,
-      data: {
-        time,
-        msgUrl,
-        post_Content,
-        repost_Sender,
-        repost_content,
-        imgSrc,
-        video_content,
-        videoSrc,
-      },
+      time,
+      msgUrl,
+      post_Content,
+      repost_Sender,
+      repost_content,
+      imgSrc,
+      video_content,
+      videoSrc,
     };
   });
   await page.close();
-  return data;
+  return {
+    name,
+    data,
+  };
 };
 const get_Date = async (browserWSEndpoint: any) => {
   //直接连接已经存在的 Chrome
@@ -141,7 +141,7 @@ const get_Date = async (browserWSEndpoint: any) => {
   Dates[2] = await get_Page_Date(browser, Urls[2].url, Urls[2].name);
   Dates[3] = await get_Page_Date(browser, Urls[3].url, Urls[3].name);
   Dates[4] = await get_Page_Date(browser, Urls[4].url, Urls[4].name);
-  console.log(Dates);
+
   return Dates;
 };
 const isNewMsg = (Dates: Dates[], reg: RegExp) => {

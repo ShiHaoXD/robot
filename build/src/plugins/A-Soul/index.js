@@ -7,17 +7,21 @@ const oicq_1 = require("oicq");
 const install = async () => {
     const Reg = /^获取(嘉然|珈乐|乃琳|贝拉|向晚)最新动态$/i;
     const timeReg = /[0-9] 分钟前/i;
+    const rule = new node_schedule_1.RecurrenceRule();
+    const times_minutes = [10, 20, 30, 40, 50, 0];
+    rule.minute = times_minutes;
     let flag = true;
     let browserWSEndpoint = await (0, util_1.initBrowser)(); //初始化
     let Dates = await (0, util_1.get_Date)(browserWSEndpoint); //初始化数组
+    console.log(Dates);
     let lastedMsg = (0, util_1.isNewMsg)(Dates, timeReg);
     (0, node_schedule_1.scheduleJob)('5 0 0 * * *', async () => {
         //每日重启浏览器
         await (0, util_1.closeBrowser)(browserWSEndpoint);
         browserWSEndpoint = await (0, util_1.initBrowser)();
     });
-    (0, node_schedule_1.scheduleJob)('0 10 * * * *', async () => {
-        //设置每五分钟爬取一次
+    (0, node_schedule_1.scheduleJob)(rule, async () => {
+        //设置每十分钟爬取一次
         Dates = await (0, util_1.get_Date)(browserWSEndpoint);
         lastedMsg = (0, util_1.isNewMsg)(Dates, timeReg);
         if (!lastedMsg) {

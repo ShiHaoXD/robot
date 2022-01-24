@@ -94,21 +94,21 @@ const get_Page_Date = async (browser, url, name) => {
             videoSrc = (mainCard.querySelector('.video-container a')).href;
         }
         return {
-            name: name,
-            data: {
-                time,
-                msgUrl,
-                post_Content,
-                repost_Sender,
-                repost_content,
-                imgSrc,
-                video_content,
-                videoSrc,
-            },
+            time,
+            msgUrl,
+            post_Content,
+            repost_Sender,
+            repost_content,
+            imgSrc,
+            video_content,
+            videoSrc,
         };
     });
     await page.close();
-    return data;
+    return {
+        name,
+        data,
+    };
 };
 const get_Date = async (browserWSEndpoint) => {
     //直接连接已经存在的 Chrome
@@ -119,22 +119,18 @@ const get_Date = async (browserWSEndpoint) => {
     // Urls.forEach(val => {
     //   task.push(
     //     (async () => {
-    //       const data: Data = await get_Page_Date(browser, val.url);
-    //       return {
-    //         name: val.name,
-    //         data: data,
-    //       };
+    //       const data: Dates = await get_Page_Date(browser, val.url,val.name);
+    //       return data
     //     })()
     //   );
     // });
-    // const Dates: Dates[] = await Promise.all(task);
+    // const Dates: Dates[] = await Promise.all(task);   //<-并发式获取数据，要求多核，单核真不行
     const Dates = [];
     Dates[0] = await get_Page_Date(browser, info_1.Urls[0].url, info_1.Urls[0].name);
     Dates[1] = await get_Page_Date(browser, info_1.Urls[1].url, info_1.Urls[1].name);
     Dates[2] = await get_Page_Date(browser, info_1.Urls[2].url, info_1.Urls[2].name);
     Dates[3] = await get_Page_Date(browser, info_1.Urls[3].url, info_1.Urls[3].name);
     Dates[4] = await get_Page_Date(browser, info_1.Urls[4].url, info_1.Urls[4].name);
-    console.log(Dates);
     return Dates;
 };
 exports.get_Date = get_Date;

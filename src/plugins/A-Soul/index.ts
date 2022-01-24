@@ -6,7 +6,7 @@ import {
   getIndexByName,
   isNewMsg,
 } from './util';
-import {scheduleJob} from 'node-schedule';
+import {scheduleJob, RecurrenceRule} from 'node-schedule';
 import {bot, msgSender} from '../../index';
 import {Dates} from './types';
 import {segment} from 'oicq';
@@ -14,17 +14,21 @@ import {segment} from 'oicq';
 const install = async () => {
   const Reg = /^获取(嘉然|珈乐|乃琳|贝拉|向晚)最新动态$/i;
   const timeReg = /[0-9] 分钟前/i;
+  const rule = new RecurrenceRule();
+  const times_minutes = [10, 20, 30, 40, 50, 0];
+  rule.minute = times_minutes;
   let flag = true;
   let browserWSEndpoint = await initBrowser(); //初始化
   let Dates: Dates[] = await get_Date(browserWSEndpoint); //初始化数组
+  console.log(Dates);
   let lastedMsg = isNewMsg(Dates, timeReg);
   scheduleJob('5 0 0 * * *', async () => {
     //每日重启浏览器
     await closeBrowser(browserWSEndpoint);
     browserWSEndpoint = await initBrowser();
   });
-  scheduleJob('0 10 * * * *', async () => {
-    //设置每五分钟爬取一次
+  scheduleJob(rule, async () => {
+    //设置每十分钟爬取一次
     Dates = await get_Date(browserWSEndpoint);
     lastedMsg = isNewMsg(Dates, timeReg);
     if (!lastedMsg) {
