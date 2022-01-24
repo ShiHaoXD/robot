@@ -1,5 +1,5 @@
 import {segment} from 'oicq';
-import {bot, msgSender} from '../index.js';
+import {bot, msgSender} from '../index';
 
 const install = () => {
   // 回复图片

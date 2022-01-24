@@ -4,9 +4,9 @@ import {
   getLocalTime,
   getLocation,
 } from './util.js';
-import {infos} from './config.example.js';
+import {infos} from './config.example';
 import {scheduleJob} from 'node-schedule';
-import {bot, msgSender} from '../../index.js';
+import {bot, msgSender} from '../../index';
 const baseURL = 'https://we.cqupt.edu.cn/api';
 const headers = {
   'User-Agent':

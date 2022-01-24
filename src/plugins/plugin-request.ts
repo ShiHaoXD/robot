@@ -1,4 +1,4 @@
-import {bot, msgSender} from '../index.js';
+import {bot, msgSender} from '../index';
 
 const install = () => {
   // 同意好友申请

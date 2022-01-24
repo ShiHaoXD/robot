@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clockin = void 0;
 const util_js_1 = require("./util.js");
-const config_example_js_1 = require("./config.example.js");
+const config_example_1 = require("./config.example");
 const node_schedule_1 = require("node-schedule");
-const index_js_1 = require("../../index.js");
+const index_1 = require("../../index");
 const baseURL = 'https://we.cqupt.edu.cn/api';
 const headers = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0.1; MuMu Build/V417IR; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/52.0.2743.100 Safari/537.36 MMWEBID/4360 MicroMessenger/7.0.22.1820(0x27001636) Process/appbrand2 WeChat/arm32 Weixin Android Tablet NetType/WIFI Language/zh_CN ABI/arm64 MiniProgramEnv/android',
@@ -89,7 +89,7 @@ function getMrdkKey(d, h) {
 }
 async function healthClockin(name) {
     try {
-        const { openid, xh, address, gender } = config_example_js_1.infos[name].info;
+        const { openid, xh, address, gender } = config_example_1.infos[name].info;
         const { data: clockinStatus } = await getClockinStatus({
             xh,
             timestamp: (0, util_js_1.getNowTimestamp)(),
@@ -131,16 +131,16 @@ async function healthClockin(name) {
                 mrdkkey: getMrdkKey((0, util_js_1.getLocalTime)().getUTCDate(), (0, util_js_1.getLocalTime)().getUTCHours()),
                 timestamp: (0, util_js_1.getNowTimestamp)(),
             });
-            index_js_1.msgSender.sendPrivateMsgByGroup('今日打卡成功', config_example_js_1.infos[name].owner_id);
+            index_1.msgSender.sendPrivateMsgByGroup('今日打卡成功', config_example_1.infos[name].owner_id);
         }
     }
     catch (error) {
         console.log(error);
-        index_js_1.msgSender.sendPrivateMsgByGroup('今日打卡失败，请手动打卡', config_example_js_1.infos[name].owner_id);
+        index_1.msgSender.sendPrivateMsgByGroup('今日打卡失败，请手动打卡', config_example_1.infos[name].owner_id);
     }
 }
 const install = () => {
-    index_js_1.bot.on('message.group', msg => {
+    index_1.bot.on('message.group', msg => {
         if (msg.raw_message === '关闭每日打卡') {
             if (msg.sender.user_id === 1716509548) {
                 switchkey = false;
@@ -161,8 +161,8 @@ const install = () => {
         }
         if (PersonalShutReg.test(msg.raw_message)) {
             if (msg.sender.user_id ===
-                config_example_js_1.infos[msg.raw_message.replace(PersonalShutReg, '')].owner_id) {
-                config_example_js_1.infos[msg.raw_message.replace(PersonalShutReg, '')].switch_key = false;
+                config_example_1.infos[msg.raw_message.replace(PersonalShutReg, '')].owner_id) {
+                config_example_1.infos[msg.raw_message.replace(PersonalShutReg, '')].switch_key = false;
                 msg.reply('关闭成功', false);
             }
             else {
@@ -171,7 +171,7 @@ const install = () => {
         }
         else if (PersonalOpenReg.test(msg.raw_message)) {
             if (msg.sender.user_id ===
-                config_example_js_1.infos[msg.raw_message.replace(PersonalOpenReg, '')].owner_id) {
+                config_example_1.infos[msg.raw_message.replace(PersonalOpenReg, '')].owner_id) {
                 switchkey = true;
                 msg.reply('打开成功', false);
             }
@@ -202,7 +202,7 @@ const install = () => {
     });
     (0, node_schedule_1.scheduleJob)('0 0 8 * * *', () => {
         if (switchkey) {
-            for (const name in config_example_js_1.infos) {
+            for (const name in config_example_1.infos) {
                 healthClockin(name);
             }
         }

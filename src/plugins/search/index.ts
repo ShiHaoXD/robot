@@ -1,4 +1,4 @@
-import {bot} from '../../index.js';
+import {bot} from '../../index';
 const baiduUrl = 'www.baidu.com/s?wd=';
 const searchRegExp = /^百度搜索 /;
 const UrlPlus = (str: String) => {

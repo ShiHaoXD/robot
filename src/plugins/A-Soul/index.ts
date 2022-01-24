@@ -39,7 +39,7 @@ const install = async () => {
           stringFormat(Dates[index]),
           segment.image(Dates[index].data.imgSrc),
         ]);
-      } else {
+      } else if (Dates[index].data.imgSrc === '') {
         msgSender.sendGroupMsg([stringFormat(Dates[index])]);
       }
     }

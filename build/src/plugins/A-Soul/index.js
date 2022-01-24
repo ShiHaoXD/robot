@@ -33,7 +33,7 @@ const install = async () => {
                     oicq_1.segment.image(Dates[index].data.imgSrc),
                 ]);
             }
-            else {
+            else if (Dates[index].data.imgSrc === '') {
                 index_1.msgSender.sendGroupMsg([(0, util_1.stringFormat)(Dates[index])]);
             }
         }

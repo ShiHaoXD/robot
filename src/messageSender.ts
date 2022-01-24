@@ -1,4 +1,3 @@
-import {bot} from './index.js';
 class messageSender {
   client;
   groupId;
