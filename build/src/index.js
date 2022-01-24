@@ -29,8 +29,8 @@ exports.bot = bot;
 const msgSender = new messageSender_1.messageSender(bot, 261497187);
 exports.msgSender = msgSender;
 function installPlugin() {
-    plugins_1.plugins.forEach((plugin) => {
-        plugin.install();
+    plugins_1.plugins.forEach(async (plugin) => {
+        await plugin.install();
     });
 }
 bot.on('message.group', msg => {

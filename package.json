@@ -12,6 +12,7 @@
   "scripts": {
     "start": "npm run fix && npm run clean && npm run compile && npm run dev",
     "dev": "pm2 start build/src/index.js --name=bot",
+    "test":"npm run fix && npm run clean && npm run compile && node build/src/index.js",
     "stop": "pm2 stop bot",
     "log": "pm2 logs bot",
     "list": "pm2 list",
