@@ -23,7 +23,6 @@ const install = async () => {
         if (!lastedMsg) {
             index_1.msgSender.sendGroupMsg(lastedMsg);
         }
-        flag = true;
     });
     index_1.bot.on('message.group', async (msg) => {
         if (Reg.test(msg.raw_message)) {
@@ -43,9 +42,12 @@ const install = async () => {
             index_1.msgSender.sendGroupMsg('正在强制更新');
             Dates = await (0, util_1.get_Date)(browserWSEndpoint);
             index_1.msgSender.sendGroupMsg('强制更新成功');
+            setTimeout(() => {
+                flag = true;
+            }, 1000 * 60);
         }
         else if (msg.raw_message === '强制更新数据' && !flag) {
-            index_1.msgSender.sendGroupMsg('十分钟内仅允许一次强制更新');
+            index_1.msgSender.sendGroupMsg('60s内仅允许一次强制更新');
         }
         if (msg.raw_message === '获取最新动态') {
             if (!lastedMsg) {

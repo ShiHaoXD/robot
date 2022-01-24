@@ -6,7 +6,7 @@ const fs = require('fs');
 const initBrowser = async () => {
   const browserWSEndpoint = await puppeteer
     .launch({
-      headless: false,
+      headless: true,
       defaultViewport: {width: 1920, height: 1080},
       args: ['--start-maximized', '--no-sandbox'],
       ignoreDefaultArgs: ['--enable-automation'],

@@ -10,8 +10,8 @@
   "license": "Apache-2.0",
   "keywords": [],
   "scripts": {
-    "start": "npm run fix && npm run clean && npm run compile && node build/src/index.js",
-    "dev": "pm2 start index.js --name=bot",
+    "start": "npm run fix && npm run clean && npm run compile && npm run dev",
+    "dev": "pm2 start build/src/index.js --name=bot",
     "stop": "pm2 stop bot",
     "log": "pm2 logs bot",
     "list": "pm2 list",
