@@ -76,7 +76,7 @@ const get_Page_Date = async (browser: any, url: String, name: String) => {
       repost_Sender = mainCard.querySelector('.repost .up-info .username')!
         .innerHTML!;
       repost_content = (<HTMLElement>(
-        mainCard.querySelector('.repost .content')!
+        mainCard.querySelector('.repost .content-full')!
       )).innerText;
     }
     if (isRePost.indexOf('imgbox') >= 0) {
