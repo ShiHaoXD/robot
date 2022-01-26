@@ -22,6 +22,10 @@ const Urls = [
         name: '贝拉',
         url: 'https://space.bilibili.com/672353429/dynamic', //贝拉
     },
+    {
+        name: 'admin',
+        url: 'https://space.bilibili.com/8453617/dynamic', //我的
+    },
 ];
 exports.Urls = Urls;
 //# sourceMappingURL=info.js.map

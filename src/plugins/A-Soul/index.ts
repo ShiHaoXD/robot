@@ -13,9 +13,9 @@ import {segment} from 'oicq';
 
 const install = async () => {
   const Reg = /^获取(嘉然|珈乐|乃琳|贝拉|向晚)最新动态$/i;
-  const timeReg = /[0-9] 分钟前/i;
+  const timeReg = /((0|1|2|3|4|5|6|7|8|9) 分钟前|刚刚)/g;
   const rule = new RecurrenceRule();
-  const times_minutes = [3,9,15,21,27,33,39,45,51,57];
+  const times_minutes = [3, 9, 15, 21, 27, 33, 39, 45, 51, 57];
   rule.minute = times_minutes;
   let flag = true;
   let browserWSEndpoint = await initBrowser(); //初始化
@@ -24,20 +24,21 @@ const install = async () => {
   let lastedMsg = isNewMsg(Dates, timeReg);
   scheduleJob('5 0 0 * * *', async () => {
     //每日重启浏览器
-    flag=false;
+    flag = false;
     await closeBrowser(browserWSEndpoint);
     browserWSEndpoint = await initBrowser();
-    flag=true;
+    flag = true;
   });
   scheduleJob(rule, async () => {
     //设置每6分钟爬取一次
-    flag=false;  //锁住
+    flag = false; //锁住
     Dates = await get_Date(browserWSEndpoint);
     lastedMsg = isNewMsg(Dates, timeReg);
-    if (!lastedMsg) {
+    console.log(lastedMsg);
+    if (lastedMsg !== []) {
       msgSender.sendGroupMsg(lastedMsg);
     }
-    flag=true;
+    flag = true;
   });
   bot.on('message.group', async msg => {
     if (Reg.test(msg.raw_message)) {

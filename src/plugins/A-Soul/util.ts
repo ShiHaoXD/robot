@@ -141,7 +141,6 @@ const get_Date = async (browserWSEndpoint: any) => {
   Dates[2] = await get_Page_Date(browser, Urls[2].url, Urls[2].name);
   Dates[3] = await get_Page_Date(browser, Urls[3].url, Urls[3].name);
   Dates[4] = await get_Page_Date(browser, Urls[4].url, Urls[4].name);
-
   return Dates;
 };
 const isNewMsg = (Dates: Dates[], reg: RegExp) => {

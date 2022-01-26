@@ -9,11 +9,11 @@ const password = 'wushihao12345';
 function createBot() {
     const bot = (0, oicq_1.createClient)(account);
     //监听并输入滑动验证码ticket(同一设备只需验证一次)
-    // bot.on('system.login.slider', () => {
-    //   process.stdin.once('data', input => {
-    // 	bot.sliderLogin(input);
-    //   });
-    // });
+    bot.on('system.login.slider', () => {
+        process.stdin.once('data', input => {
+            bot.sliderLogin(String(input));
+        });
+    });
     //监听设备锁验证(同一设备只需验证一次)
     bot.on('system.login.device', () => {
         bot.logger.info('验证完成后敲击Enter继续..');
