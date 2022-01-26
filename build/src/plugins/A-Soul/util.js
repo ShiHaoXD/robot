@@ -8,7 +8,7 @@ const fs = require('fs');
 const initBrowser = async () => {
     const browserWSEndpoint = await puppeteer
         .launch({
-        headless: true,
+        headless: false,
         defaultViewport: { width: 1920, height: 1080 },
         args: ['--start-maximized', '--no-sandbox'],
         ignoreDefaultArgs: ['--enable-automation'],
@@ -50,6 +50,9 @@ const get_Page_Date = async (browser, url, name) => {
             if (mainCard.querySelector('.imagesbox') !== null) {
                 type_Str += 'imgbox';
             }
+            if (mainCard.querySelector('.content-full') !== null) {
+                type_Str += 'content';
+            }
             return type_Str;
         } //判断是否为转发动态
         function ifFirstCard() {
@@ -66,7 +69,7 @@ const get_Page_Date = async (browser, url, name) => {
         const time = mainCard.querySelector('.detail-link').innerHTML;
         const msgUrl = mainCard.querySelector('.detail-link')
             .href;
-        const post_Content = (mainCard.querySelector('.content .content-full')).innerText; //动态内容
+        let post_Content = '';
         let repost_Sender = '';
         let repost_content = '';
         let video_content = '';
@@ -92,6 +95,9 @@ const get_Page_Date = async (browser, url, name) => {
                         .join('');
             video_content = (mainCard.querySelector('.video-container .content')).innerText;
             videoSrc = (mainCard.querySelector('.video-container a')).href;
+        }
+        if (isRePost.indexOf('content') >= 0) {
+            post_Content = (mainCard.querySelector('.content .content-full')).innerText; //动态内容
         }
         return {
             time,
