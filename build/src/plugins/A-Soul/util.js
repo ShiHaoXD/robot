@@ -131,7 +131,6 @@ const get_Date = async (browserWSEndpoint) => {
     Dates[2] = await get_Page_Date(browser, info_1.Urls[2].url, info_1.Urls[2].name);
     Dates[3] = await get_Page_Date(browser, info_1.Urls[3].url, info_1.Urls[3].name);
     Dates[4] = await get_Page_Date(browser, info_1.Urls[4].url, info_1.Urls[4].name);
-    Dates[5] = await get_Page_Date(browser, info_1.Urls[5].url, info_1.Urls[5].name);
     return Dates;
 };
 exports.get_Date = get_Date;
@@ -154,7 +153,7 @@ const stringFormat = (val) => {
         ? '原动态: \n' + '\t原动态up:' + val.data.repost_Sender + '\n'
         : val.data.repost_Sender + val.data.repost_content + '\n';
     str += val.data.video_content + '\n' + val.data.repost_content + '\n';
-    //str += val.data.msgUrl + '\n';
+    str += val.data.msgUrl + '\n';
     return str;
 };
 exports.stringFormat = stringFormat;

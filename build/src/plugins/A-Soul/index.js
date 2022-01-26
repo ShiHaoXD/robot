@@ -6,7 +6,7 @@ const index_1 = require("../../index");
 const oicq_1 = require("oicq");
 const install = async () => {
     const Reg = /^获取(嘉然|珈乐|乃琳|贝拉|向晚)最新动态$/i;
-    const timeReg = /((0|1|2|3|4|5|6|7|8|9) 分钟前|刚刚)/g;
+    const timeReg = /([0|1|2|3|4|5|6]{1} 分钟前|刚刚)/g;
     const rule = new node_schedule_1.RecurrenceRule();
     const times_minutes = [3, 9, 15, 21, 27, 33, 39, 45, 51, 57];
     rule.minute = times_minutes;
@@ -35,6 +35,7 @@ const install = async () => {
     });
     index_1.bot.on('message.group', async (msg) => {
         if (Reg.test(msg.raw_message)) {
+            console.log('更新部分');
             const index = (0, util_1.getIndexByName)(Dates, msg.raw_message.slice(2, 4));
             if (Dates[index].data.imgSrc !== '') {
                 index_1.msgSender.sendGroupMsg([
@@ -47,6 +48,7 @@ const install = async () => {
             }
         }
         if (msg.raw_message === '强制更新数据' && flag) {
+            console.log('强制更新部分');
             flag = false;
             index_1.msgSender.sendGroupMsg('正在强制更新');
             Dates = await (0, util_1.get_Date)(browserWSEndpoint);
@@ -59,6 +61,7 @@ const install = async () => {
             index_1.msgSender.sendGroupMsg('数据正在更新中');
         }
         if (msg.raw_message === '获取最新动态') {
+            console.log('最新部分');
             if (!lastedMsg) {
                 index_1.msgSender.sendGroupMsg(lastedMsg);
             }

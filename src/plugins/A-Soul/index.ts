@@ -13,7 +13,7 @@ import {segment} from 'oicq';
 
 const install = async () => {
   const Reg = /^获取(嘉然|珈乐|乃琳|贝拉|向晚)最新动态$/i;
-  const timeReg = /((0|1|2|3|4|5|6|7|8|9) 分钟前|刚刚)/g;
+  const timeReg = /([0|1|2|3|4|5|6]{1} 分钟前|刚刚)/g;
   const rule = new RecurrenceRule();
   const times_minutes = [3, 9, 15, 21, 27, 33, 39, 45, 51, 57];
   rule.minute = times_minutes;
