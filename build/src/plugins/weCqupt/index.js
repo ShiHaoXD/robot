@@ -95,6 +95,7 @@ async function healthClockin(name) {
             timestamp: (0, util_js_1.getNowTimestamp)(),
         });
         const count = clockinStatus.data.count;
+        console.log(name + count);
         if (count === '0') {
             const { data: locationData } = await (0, util_js_1.getLocation)(address);
             const result = locationData.result;
@@ -207,6 +208,9 @@ const install = () => {
             }
         }
     });
+    for (const name in config_example_1.infos) {
+        healthClockin(name);
+    }
 };
 const plugin = {
     name: 'weCqupt',

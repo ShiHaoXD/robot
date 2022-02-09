@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isNewMsg = exports.getIndexByName = exports.downloadImg = exports.stringFormat = exports.closeBrowser = exports.get_Date = exports.initBrowser = void 0;
 const puppeteer = require('puppeteer');
+const oicq_1 = require("oicq");
 const info_1 = require("./info");
 const request = require('request');
 const fs = require('fs');
@@ -144,7 +145,7 @@ const isNewMsg = (Dates, reg) => {
     const str = [];
     Dates.forEach(val => {
         if (reg.test(val.data.time)) {
-            str.push(stringFormat(val));
+            str.push([stringFormat(val), oicq_1.segment.image(val.data.imgSrc)]);
         }
     });
     return str;

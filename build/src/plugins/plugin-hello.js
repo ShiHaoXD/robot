@@ -19,6 +19,9 @@ const install = () => {
         if (msg.raw_message === 'a手') {
             index_1.msgSender.sendGroupMsg('a手我的a手🥵🥵🥵🤤🤤🤤');
         }
+        if (msg.raw_message === '测试') {
+            index_1.msgSender.sendGroupMsg([['123'], ['456']]);
+        }
     });
     // 接收戳一戳
     index_1.bot.on('notice.group.poke', function (e) {

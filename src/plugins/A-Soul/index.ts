@@ -20,25 +20,31 @@ const install = async () => {
   let flag = true;
   let browserWSEndpoint = await initBrowser(); //初始化
   let Dates: Dates[] = await get_Date(browserWSEndpoint); //初始化数组
+  await closeBrowser(browserWSEndpoint);
   console.log(Dates);
   let lastedMsg = isNewMsg(Dates, timeReg);
-  scheduleJob('5 0 0 * * *', async () => {
-    //每日重启浏览器
-    flag = false;
-    await closeBrowser(browserWSEndpoint);
-    browserWSEndpoint = await initBrowser();
-    flag = true;
-  });
+  // scheduleJob('5 0 0 * * *', async () => {
+  //   //每日重启浏览器
+  //   flag = false;
+  //   await closeBrowser(browserWSEndpoint);
+  //   browserWSEndpoint = await initBrowser();
+  //   flag = true;
+  // });
   scheduleJob(rule, async () => {
     //设置每6分钟爬取一次
+
     flag = false; //锁住
+    browserWSEndpoint = await initBrowser();
     Dates = await get_Date(browserWSEndpoint);
     lastedMsg = isNewMsg(Dates, timeReg);
     console.log(lastedMsg);
     if (lastedMsg !== []) {
-      msgSender.sendGroupMsg(lastedMsg);
+      lastedMsg.forEach(val => {
+        msgSender.sendGroupMsg(val);
+      });
     }
     flag = true;
+    await closeBrowser(browserWSEndpoint);
   });
   bot.on('message.group', async msg => {
     if (Reg.test(msg.raw_message)) {
@@ -54,9 +60,11 @@ const install = async () => {
     }
     if (msg.raw_message === '强制更新数据' && flag) {
       flag = false;
+      browserWSEndpoint = await initBrowser();
       msgSender.sendGroupMsg('正在强制更新');
       Dates = await get_Date(browserWSEndpoint);
       msgSender.sendGroupMsg('强制更新成功');
+      await closeBrowser(browserWSEndpoint);
       setTimeout(() => {
         flag = true;
       }, 1000 * 60);

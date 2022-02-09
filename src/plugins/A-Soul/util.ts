@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+import {segment} from 'oicq';
 import {Urls} from './info';
 import {Data, Dates} from './types';
 const request = require('request');
@@ -150,10 +151,10 @@ const get_Date = async (browserWSEndpoint: any) => {
   return Dates;
 };
 const isNewMsg = (Dates: Dates[], reg: RegExp) => {
-  const str: Array<String> = [];
+  const str: Array<any> = [];
   Dates.forEach(val => {
     if (reg.test(val.data.time)) {
-      str.push(stringFormat(val));
+      str.push([stringFormat(val), segment.image(val.data.imgSrc)]);
     }
   });
   return str;

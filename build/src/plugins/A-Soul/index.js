@@ -13,25 +13,30 @@ const install = async () => {
     let flag = true;
     let browserWSEndpoint = await (0, util_1.initBrowser)(); //初始化
     let Dates = await (0, util_1.get_Date)(browserWSEndpoint); //初始化数组
+    await (0, util_1.closeBrowser)(browserWSEndpoint);
     console.log(Dates);
     let lastedMsg = (0, util_1.isNewMsg)(Dates, timeReg);
-    (0, node_schedule_1.scheduleJob)('5 0 0 * * *', async () => {
-        //每日重启浏览器
-        flag = false;
-        await (0, util_1.closeBrowser)(browserWSEndpoint);
-        browserWSEndpoint = await (0, util_1.initBrowser)();
-        flag = true;
-    });
+    // scheduleJob('5 0 0 * * *', async () => {
+    //   //每日重启浏览器
+    //   flag = false;
+    //   await closeBrowser(browserWSEndpoint);
+    //   browserWSEndpoint = await initBrowser();
+    //   flag = true;
+    // });
     (0, node_schedule_1.scheduleJob)(rule, async () => {
         //设置每6分钟爬取一次
         flag = false; //锁住
+        browserWSEndpoint = await (0, util_1.initBrowser)();
         Dates = await (0, util_1.get_Date)(browserWSEndpoint);
         lastedMsg = (0, util_1.isNewMsg)(Dates, timeReg);
         console.log(lastedMsg);
         if (lastedMsg !== []) {
-            index_1.msgSender.sendGroupMsg(lastedMsg);
+            lastedMsg.forEach(val => {
+                index_1.msgSender.sendGroupMsg(val);
+            });
         }
         flag = true;
+        await (0, util_1.closeBrowser)(browserWSEndpoint);
     });
     index_1.bot.on('message.group', async (msg) => {
         if (Reg.test(msg.raw_message)) {
@@ -48,9 +53,11 @@ const install = async () => {
         }
         if (msg.raw_message === '强制更新数据' && flag) {
             flag = false;
+            browserWSEndpoint = await (0, util_1.initBrowser)();
             index_1.msgSender.sendGroupMsg('正在强制更新');
             Dates = await (0, util_1.get_Date)(browserWSEndpoint);
             index_1.msgSender.sendGroupMsg('强制更新成功');
+            await (0, util_1.closeBrowser)(browserWSEndpoint);
             setTimeout(() => {
                 flag = true;
             }, 1000 * 60);

@@ -18,6 +18,9 @@ const install = () => {
     if (msg.raw_message === 'a手') {
       msgSender.sendGroupMsg('a手我的a手🥵🥵🥵🤤🤤🤤');
     }
+    if (msg.raw_message === '测试') {
+      msgSender.sendGroupMsg([['123'], ['456']]);
+    }
   });
 
   // 接收戳一戳
