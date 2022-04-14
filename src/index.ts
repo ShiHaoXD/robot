@@ -1,8 +1,9 @@
 import {createClient} from 'oicq';
 import {plugins} from './plugins/plugins';
 import {messageSender} from './messageSender';
-const account = 3300945532;
-const password = 'wushihao12345';
+const account = 0;
+const password = '';
+const groupId = 0;
 function createBot() {
   const bot = createClient(account);
   //监听并输入滑动验证码ticket(同一设备只需验证一次)
@@ -23,7 +24,7 @@ function createBot() {
   return bot;
 }
 const bot = createBot();
-const msgSender = new messageSender(bot, 261497187);
+const msgSender = new messageSender(bot, groupId);
 export {bot, msgSender};
 
 function installPlugin() {

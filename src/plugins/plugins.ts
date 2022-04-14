@@ -12,6 +12,6 @@ const plugins = [
   plugin_online,
   plugin_weCqupt,
   plugin_search,
-  // plugin_A_Soul,
+  plugin_A_Soul,
 ];
 export {plugins};

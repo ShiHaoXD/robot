@@ -18,9 +18,10 @@ const install = async () => {
   const times_minutes = [3, 9, 15, 21, 27, 33, 39, 45, 51, 57];
   rule.minute = times_minutes;
   let flag = true;
-  let browserWSEndpoint = await initBrowser(); //初始化
-  let Dates: Dates[] = await get_Date(browserWSEndpoint); //初始化数组
-  await closeBrowser(browserWSEndpoint);
+  let browserWSEndpoint;
+  const browserWSEndpoint_init = await initBrowser(); //初始化
+  let Dates: Dates[] = await get_Date(browserWSEndpoint_init); //初始化数组
+  await closeBrowser(browserWSEndpoint_init);
   console.log(Dates);
   let lastedMsg = isNewMsg(Dates, timeReg);
   // scheduleJob('5 0 0 * * *', async () => {
